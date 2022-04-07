@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	　　<h2>ユーザー一覧画面</h2>
+	<table border="1">
+		<tr>
+			<th>ID</th>
+			<th>名前</th>
+			<th>性別</th>
+			<th>操作</th>
+		</tr>
+
+		<tr th:each="user : ${userList}">
+			<td th:text="${user.getId}"></td>
+			<td th:text="${user.getName}"></td>
+			<td th:text="${user.getSex}">
+		</tr>
+	</table>
+
+</body>
+
+</html>
