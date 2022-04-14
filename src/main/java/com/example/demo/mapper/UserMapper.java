@@ -25,12 +25,15 @@ public interface UserMapper {
 	@Select("select * from user where name Like CONCAT('%',#{name},'%')")
 	List<UserEntity> getUserByName(String name);
 
+	@Select("select * from user where name=#{name}")
+	UserEntity getUserEntityByName(String name);
+
 	// insert
-	@Insert("insert into user (id, name, sex) values (#{id},#{name},#{sex})")
+	@Insert("insert into user (id, name, sex,password,created_time,update_time) values (#{id},#{name},#{sex},#{password},now(),now())")
 	void insert(UserForm userForm);
 
 	// update
-	@Update("update user set id = #{id}, name = #{name}, sex = #{sex} where id = #{id}")
+	@Update("update user set id = #{id}, name = #{name}, sex = #{sex}, password = #{password} where id = #{id}")
 	void update(UserEntity user);
 
 	// delete

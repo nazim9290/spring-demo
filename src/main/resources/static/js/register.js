@@ -6,7 +6,7 @@ $(function(){
   var id= $('#id').val()
   var name=$('#name').val()
   var sex= $('#sex').val()
-  var mobail=$('#mobail').val()
+
 	
 	<!-- 正規表現 -->
 
@@ -34,13 +34,7 @@ $(function(){
 	e.preventDefault()
 	}
 	
-	//mobail
-	var pattern= /^\d{3}(?:-\d{4}-\d{4}|\d{8}|\d-\d{3,4}-\d{4})$/
-	
-	if(!pattern.test(mobail)){
-	alert("携帯電話項目に正しく入力してください。")
-	e.preventDefault()
-	}
+
 	
 });
 

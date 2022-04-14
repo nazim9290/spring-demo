@@ -34,6 +34,7 @@ public class UserService {
 		userForm.setId(user.getId());
 		userForm.setName(user.getName());
 		userForm.setSex(user.getSex());
+		userForm.setUpdate_time(user.getUpdate_time());
 
 		return userForm;
 	}
@@ -43,8 +44,15 @@ public class UserService {
 		return userMapper.getUserByName(username);
 	}
 
+	public UserEntity getUserEntityByName(String username) {
+		return userMapper.getUserEntityByName(username);
+	}
+
 	// ユーザー登録
 	public void insertUser(UserForm userForm) {
+		// password を暗号化する
+//		userForm.setPassword(bcryptEncoder.encode(userForm.getPassword()));
+
 		userMapper.insert(userForm);
 	}
 
@@ -58,11 +66,9 @@ public class UserService {
 		}
 
 		UserEntity userEntity = new UserEntity();
-
 		userEntity.setId(user.getId());
 		userEntity.setName(user.getName());
 		userEntity.setSex(user.getSex());
-
 		userMapper.update(userEntity);
 	}
 

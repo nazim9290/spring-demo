@@ -15,6 +15,8 @@ public class UserForm {
 	@NotEmpty
 	private String sex;
 
+	private String password;
+
 	private String created_time;
 	private String update_time;
 
@@ -56,6 +58,14 @@ public class UserForm {
 
 	public void setUpdate_time(String update_time) {
 		this.update_time = update_time;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

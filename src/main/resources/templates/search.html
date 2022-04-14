@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>検索画面</title>
+    <script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+    <style>
+		    table{
+		    display:none;
+          }
+    </style>
+    
+   <script type="text/javascript">
+   
+  $(function () {
+  $("#searchButton").click(function () {
+    var data = {
+      name: $("#name").val(),
+    }
+
+    $.ajax({
+      url: "doSearchJson",
+      type: "get",
+      data: { jsonData: JSON.stringify(data) },
+      dataType: "text",
+      header: {
+        Accept: "application/json",
+        "content-Type": "application/json",
+      },
+    })
+
+      .done(function (data) {
+        var objectData = JSON.parse(data)
+
+        $(".trObject").remove()
+
+        for (var i in objectData) {
+          $("table tbody").append(`<tr><td> ${objectData[i].id} </td><
+	    							<td> ${objectData[i].name} </td>
+	    							<td> ${objectData[i].sex} </td></tr>`)
+        }
+        $("table").show()
+        alert("成功")
+      })
+      //処理失敗の場合
+      .fail(function () {
+        alert("fall")
+      })
+  })
+})
+  
+  
+</script>
+</head>
+<body>
+	<h3>ユーザー検索(練習)</h3>
+    <form method="post" action="/user/search" th:object="${userForm}">
+        <p>名前：　<input type="text"th:field="*{name}" /></p>
+        <input type="submit" value="検索" />
+    </form>
+    <button id="searchButton">検索(AJAX)</button>
+    <table border="1">
+    <tr>
+		    <th>Id</th>
+		    <th>名前</th>
+		    <th>性別</th>
+    </tr>
+    </table>
+</body>
+</html>

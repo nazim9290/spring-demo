@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,10 +16,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.UserEntity;
+import com.example.demo.form.SearchForm;
 import com.example.demo.form.UserForm;
 import com.example.demo.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("user")
@@ -56,6 +63,25 @@ public class UserController {
 		return "update";
 	}
 
+	// 更新処理
+	@PostMapping("/update")
+	public String update(@ModelAttribute @Valid UserForm userForm, BindingResult bindingResult, Model model) {
+
+		if (bindingResult.hasErrors()) {
+			return "update";
+		}
+		try {
+			userService.updateUser(userForm);
+		} catch (Exception e) {
+			model.addAttribute("error", e.getMessage());
+			return "update";
+		}
+
+		// 更新処理
+
+		return "redirect:/user/complete";
+	}
+
 	// 検索画面に遷移する（練習）
 	@GetMapping("/toSearch")
 	public String userUpdate(Model model) {
@@ -77,24 +103,15 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			// 登録画面へ戻る
 			return "register";
+		} else {
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			String encodedPassword = passwordEncoder.encode(userForm.getPassword());
+			userForm.setPassword(encodedPassword);
 		}
 
 		// 登録処理
 		userService.insertUser(userForm);
-		return "redirect:/user/complete";
-	}
-
-	// 更新処理
-	@PostMapping("/update")
-	public String update(@ModelAttribute @Valid UserForm userForm, BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors()) {
-			return "update";
-		}
-
-		// 更新処理
-		userService.updateUser(userForm);
-		return "redirect:/user/complete";
+		return "complete";
 	}
 
 	// 削除処理
@@ -113,6 +130,18 @@ public class UserController {
 		model.addAttribute("userList", userList);
 
 		return "search_result";
+	}
+
+	@GetMapping("/doSearchJson")
+	@ResponseBody
+	public List<UserEntity> output(@RequestParam("jsonData") String data)
+			throws JsonMappingException, JsonProcessingException {
+		// json to object
+		ObjectMapper mapper = new ObjectMapper();
+
+		SearchForm searchForm = mapper.readValue(data, SearchForm.class);
+
+		return userService.getUserByName(searchForm.getName());
 	}
 
 }

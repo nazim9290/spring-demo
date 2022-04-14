@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>編集画面</title>
+    <style>
+    .message{
+		color: red;
+	}
+    </style>
+</head>
+<body>
+    <h3>ユーザー編集</h3>
+	<p if:th="${error}" th:text="${error}"></p>
+    <form method="post" action="/user/update" th:object="${userForm}">
+        <p>ID ：　<input type="text" th:value="*{id}" th:field="*{id}" readonly="readonly" /></p>
+        <!-- 
+        <p class="message" th:if="${errorMessage.get('name')}" th:text="${errorMessage.get('name')}"></p>
+         -->
+         <p class="message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+         
+        <p>名前：　<input type="text" th:value="*{name}" th:field="*{name}" /></p>
+         <!-- 
+        <p class="message" th:if="${errorMessage.get('sex')}" th:text="${errorMessage.get('sex')}"></p>
+          -->
+        <p class="message" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></p>
+        <p>性別：　<input type="text" th:value="*{sex}" th:field="*{sex}" /></p>
+        
+        <input type="hidden" th:field="*{update_time}" th:value="*{update_time}" />
+        <input type="submit" value="編集" />
+        
+    </form>
+</body>
+</html>
